@@ -4,17 +4,17 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateMahasiswaTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'users';
+    public $tableName = 'mahasiswa';
 
     /**
      * Run the migrations.
-     * @table users
+     * @table mahasiswa
      *
      * @return void
      */
@@ -23,15 +23,20 @@ class CreateUsersTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('username', 80);
-            $table->string('email', 254);
-            $table->string('password', 60);
-            $table->enum('hak', ['MAHASISWA', 'KAPRODI', 'PEMBIMBING', 'KOORDINATOR'])->default('MAHASISWA');
+            $table->string('nim', 8);
+            $table->string('nama', 80);
+            $table->unsignedInteger('user_id');
 
-            $table->unique(["username"], 'users_username_unique');
+            $table->index(["user_id"], 'fk_mahasiswa_users1_idx');
 
-            $table->unique(["email"], 'users_email_unique');
+            $table->unique(["nim"], 'nim_UNIQUE');
             $table->nullableTimestamps();
+
+
+            $table->foreign('user_id', 'fk_mahasiswa_users1_idx')
+                ->references('id')->on('users')
+                ->onDelete('no action')
+                ->onUpdate('no action');
         });
     }
 
