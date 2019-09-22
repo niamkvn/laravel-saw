@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('username', 80);
-            $table->string('email', 254);
+            $table->string('email');
             $table->string('password', 60);
             $table->enum('hak', ['MAHASISWA', 'KAPRODI', 'PEMBIMBING', 'KOORDINATOR'])->default('MAHASISWA');
 
