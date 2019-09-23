@@ -19,6 +19,9 @@ Route::group(['prefix' => 'api'], function () {
     Route::group(['prefix' => 'kriteria'], function () {
         Route::get('/', "KriteriaController@index")->name("kriteria.index");
         Route::post('/', "KriteriaController@store")->name("kriteria.store");
+        Route::get('/{key}', "KriteriaController@show")->name("kriteria.show");
+        Route::put('/{key}', "KriteriaController@update")->name("kriteria.update");
+        Route::delete('/{key}', "KriteriaController@destroy")->name("kriteria.destroy");
     });
 
 

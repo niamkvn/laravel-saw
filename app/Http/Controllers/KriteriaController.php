@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Kriteria;
 use Illuminate\Http\Request;
 
@@ -36,7 +37,27 @@ class KriteriaController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate()
+
+        $validator = Validator::make($request->all(), [
+            "nama" => "required|string|unique:kriteria,nama",
+            "kode" => "required|string|unique:kriteria,kode"
+        ]);
+
+        if ($validator->fails()) {
+            // return redirect("back")
+            //     ->withErrors($validator)
+            //     ->withInput();
+            return $validator->errors();
+        }
+
+        $kriteria = Kriteria::create([
+            "nama" => $request["nama"],
+            "kode" => $request["kode"]
+        ]);
+        return response()->json([
+            "pesan" => "Kriteria berhasil ditambahkan!",
+            "kriteria" => $kriteria
+        ]);
     }
 
     /**
@@ -45,9 +66,16 @@ class KriteriaController extends Controller
      * @param  \App\Kriteria  $kriteria
      * @return \Illuminate\Http\Response
      */
-    public function show(Kriteria $kriteria)
+    public function show($key)
     {
-        //
+        $kriteria = Kriteria::find($key);
+        if (!$kriteria) {
+            return response()->json([
+                "pesan" => "Kriteria tidak ditemukan!",
+                "key" => $key
+            ], 404);
+        }
+        return $kriteria;
     }
 
     /**
@@ -68,9 +96,32 @@ class KriteriaController extends Controller
      * @param  \App\Kriteria  $kriteria
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Kriteria $kriteria)
+    public function update(Request $request, $key)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "nama" => "required|string|unique:kriteria,nama",
+            "kode" => "required|string|unique:kriteria,kode"
+        ]);
+
+        if ($validator->fails()) {
+            // return redirect("back")
+            //     ->withErrors($validator)
+            //     ->withInput();
+            return $validator->errors();
+        }
+
+        $kriteria = Kriteria::find($key);
+        if (!$kriteria) {
+            return response()->json([
+                "pesan" => "Kriteria tidak ditemukan!",
+                "key" => $key
+            ], 404);
+        }
+        $kriteria->update($request->all());
+        return response()->json([
+            "pesan" => "Kriteria berhasil diupdate!",
+            "kriteria" => $kriteria
+        ]);
     }
 
     /**
@@ -79,8 +130,19 @@ class KriteriaController extends Controller
      * @param  \App\Kriteria  $kriteria
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Kriteria $kriteria)
+    public function destroy($key)
     {
-        //
+        $kriteria = Kriteria::find($key);
+        if (!$kriteria) {
+            return response()->json([
+                "pesan" => "Kriteria tidak ditemukan!",
+                "key" => $key
+            ], 404);
+        }
+        $kriteria->delete();
+        return response()->json([
+            "pesan" => "Kriteria berhasil dihapus!",
+            "kriteria" => $kriteria
+        ]);
     }
 }
