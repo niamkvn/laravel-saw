@@ -14,3 +14,16 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix' => 'api'], function () {
+    Route::group(['prefix' => 'kriteria'], function () {
+        Route::get('/', "KriteriaController@index")->name("kriteria.index");
+        Route::post('/', "KriteriaController@store")->name("kriteria.store");
+    });
+
+
+});
+
+// Route::group(['prefix' => 'admin'], function () {
+    
+// });
